@@ -1,17 +1,17 @@
-const User = require('./User');
-const Diary = require('./Diary');
-const Mood = require('./Mood');
+const seedMoods = require("./moods-seeds");
+const seedDiary = require("./diary-seeds");
+const seedUsers = require("./user-seeds");
+const sequelize = require("../config/connection");
 
-User.hasMany(Diary, {
-  foreignKey: 'user_id',
-  onDelete: 'CASCADE'
-});
-Diary.belongsTo(Mood, {
-    foreignKey: 'mood_id'
-});
+const seedAll = async () => {
+  await sequelize.sync({ force: true });
+  // console.log("**********DATABASE SYNCED ************");
+  await seedUsers();
+  await seedMoods();
+  // console.log("*************MOODS SYNCED**********");
+  await seedDiary();
+  // console.log("************** DIARY SEEDED");
+  process.exit(0);
+};
 
-Mood.hasOne(Diary, {
-   foreignKey: 'mood_id'
-});
-
-module.exports = { User, Diary, Mood };
+seedAll();
