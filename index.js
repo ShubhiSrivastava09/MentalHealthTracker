@@ -1,12 +1,17 @@
-const router = require('express').Router();
-const signupRoutes = require('./signup_routes');
-const diaryRoutes = require('./diary_routes');
-const loginRoutes = require('./login_routes');
-const createEntryRoutes = require('./create_entry_routes');
+const User = require('./User');
+const Diary = require('./Diary');
+const Mood = require('./Mood');
 
-router.use('/signup', signupRoutes);
-router.use('/diary', diaryRoutes);
-router.use('/login', loginRoutes);
-router.use('/create', createEntryRoutes);
+User.hasMany(Diary, {
+  foreignKey: 'user_id',
+  onDelete: 'CASCADE'
+});
+Diary.belongsTo(Mood, {
+    foreignKey: 'mood_id'
+});
 
-module.exports = router;
+Mood.hasOne(Diary, {
+   foreignKey: 'mood_id'
+});
+
+module.exports = { User, Diary, Mood };
